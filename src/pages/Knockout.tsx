@@ -1,25 +1,24 @@
-import * as React from 'react';
 import { Box, Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
-import { useMatch } from '../hooks';
 import { GameComponentParams } from '../App';
+import { useCurrentPlayer } from '../hooks/useCurrentPlayer';
 
-const Knockout = ({ game, match }: GameComponentParams) => {
-  const { code } = useParams();
-
+const Knockout: React.FC<GameComponentParams> = ({ game, match }) => {
+  const { player } = useCurrentPlayer();
   return (
     <Box sx={{ margin: 'auto' }}>
-      <Typography variant="h3" align="center" gutterBottom>
-        Knockout
+      <Typography variant="h4" align="center" gutterBottom>
+        {game.name}
         <Typography
-          variant="h6"
+          component="span"
+          variant="h4"
           color={'secondary'}
           align="center"
           gutterBottom
         >
-          {code}
+          {` ${match.matchCode} `}
         </Typography>
       </Typography>
+      {player?.username}
     </Box>
   );
 };

@@ -1,14 +1,15 @@
 import axios from 'axios';
 import { apiBaseUrl } from './apiBase';
-import { Player } from './players';
+import { Player } from './player';
 
 export interface Match {
   id: string;
   gameId: string;
   players: Array<Player>;
+  matchCreated: Date;
   matchStart: Date;
   matchComplete: Date;
-  code: string;
+  matchCode: string;
   hostPlayerId: string;
   battleId: string;
   playersWhoConfirmedScore: Array<string>;

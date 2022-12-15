@@ -9,19 +9,23 @@ import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { themeOptions } from './theme';
+import { knockout } from './routes';
+import Knockout from './pages/Knockout';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 
 const theme = createTheme(themeOptions);
+
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="BattlePuttClientApp">
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route index element={<App />} />
+          <Route path="/" element={<App />}>
+            <Route index element={<App />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
