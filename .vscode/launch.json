@@ -10,10 +10,7 @@
       "name": "Run Client App",
       "runtimeExecutable": "npm",
       "skipFiles": ["<node_internals>/**"],
-      "runtimeArgs": ["run-script", "start"],
-      "env": {
-        "PORT": "3000"
-      }
+      "runtimeArgs": ["run-script", "start"]
     }
   ]
 }
