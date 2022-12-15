@@ -2,25 +2,23 @@ import * as React from 'react';
 import { Box, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import { useMatch } from '../hooks';
+import { GameComponentParams } from '../App';
 
-const Knockout = () => {
+const Knockout = ({ game, match }: GameComponentParams) => {
   const { code } = useParams();
-  const { getMatchByCode } = useMatch();
-
-  // Load Match
-  React.useEffect(() => {
-    if (code) {
-      getMatchByCode(code);
-    }
-  }, []);
 
   return (
     <Box sx={{ margin: 'auto' }}>
       <Typography variant="h3" align="center" gutterBottom>
         Knockout
-      </Typography>
-      <Typography variant="h6" color={'secondary'} align="center" gutterBottom>
-        {code}
+        <Typography
+          variant="h6"
+          color={'secondary'}
+          align="center"
+          gutterBottom
+        >
+          {code}
+        </Typography>
       </Typography>
     </Box>
   );

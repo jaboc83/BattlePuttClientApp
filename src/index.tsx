@@ -7,10 +7,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { themeOptions } from './theme';
-import { knockout } from './routes';
-import Knockout from './pages/Knockout';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -22,9 +20,8 @@ root.render(
     <ThemeProvider theme={theme}>
       <BrowserRouter basename="BattlePuttClientApp">
         <Routes>
-          <Route path="/" element={<App />}>
-            <Route path={`${knockout}/:code`} element={<Knockout />} />
-          </Route>
+          <Route path="/" element={<App />} />
+          <Route index element={<App />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
