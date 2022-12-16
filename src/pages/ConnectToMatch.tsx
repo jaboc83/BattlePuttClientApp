@@ -1,6 +1,6 @@
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { Game, Match } from '../api';
-import { usePlayer } from '../hooks';
+import { useMatch, usePlayer } from '../hooks';
 import * as React from 'react';
 import { useCurrentPlayer } from '../hooks/useCurrentPlayer';
 
@@ -12,13 +12,12 @@ interface ConnectToMatchProps {
 const ConnectToMatch = ({ game, match }: ConnectToMatchProps) => {
   const [username, setUsername] = React.useState<string | undefined>();
   const { getPlayerByUsername, createPlayer } = usePlayer();
+  const { addPlayerToMatch } = useMatch();
   const { setPlayer } = useCurrentPlayer();
   const submitHandler = () => {
     if (username) {
-      console.log('getting player');
       getPlayerByUsername(username)
         .then(player => {
-          console.log('got player', player);
           if (player) {
             setPlayer(player);
             return;
@@ -26,9 +25,14 @@ const ConnectToMatch = ({ game, match }: ConnectToMatchProps) => {
           return createPlayer(username);
         })
         .then(player => {
-          console.log('got player', player);
           if (player) {
             setPlayer(player);
+          }
+          return player;
+        })
+        .then(player => {
+          if (player) {
+            return addPlayerToMatch(player, match.id);
           }
         })
         .catch(err => console.error(err));

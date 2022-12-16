@@ -10,7 +10,7 @@ export interface Game {
   slug: string;
 }
 
-const fetchAllGames = async () => {
+export const fetchAllGames = async () => {
   const requestConfig = {};
   const results = await axios.get(`${apiBaseUrl}/api/game`, requestConfig);
   if (results.status === 200) {
@@ -19,7 +19,7 @@ const fetchAllGames = async () => {
   throw new Error(results.data);
 };
 
-const fetchGameById = async (id: string) => {
+export const fetchGameById = async (id: string) => {
   const requestConfig = {};
   const results = await axios.get(
     `${apiBaseUrl}/api/game/${id}`,
@@ -31,7 +31,7 @@ const fetchGameById = async (id: string) => {
   throw new Error(results.data);
 };
 
-const fetchGameBySlug = async (id: string) => {
+export const fetchGameBySlug = async (id: string) => {
   const requestConfig = {};
   const results = await axios.get(
     `${apiBaseUrl}/api/game/s/${id}`,
@@ -42,5 +42,3 @@ const fetchGameBySlug = async (id: string) => {
   }
   throw new Error(results.data);
 };
-
-export { fetchAllGames, fetchGameById, fetchGameBySlug };

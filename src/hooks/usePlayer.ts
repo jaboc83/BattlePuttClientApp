@@ -1,6 +1,6 @@
 import { fetchPlayerByUsername, createPlayer } from '../api';
 
-const usePlayer = () => {
+export const usePlayer = () => {
   return {
     getPlayerByUsername: fetchPlayerByUsername,
     createPlayer: (username: string) => {
@@ -8,5 +8,3 @@ const usePlayer = () => {
     },
   };
 };
-
-export { usePlayer };

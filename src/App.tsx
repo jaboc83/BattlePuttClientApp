@@ -9,6 +9,7 @@ import { PlayerContext } from './contexts/PlayerContext';
 import { Player } from './api/player';
 import NotFound from './pages/NotFound';
 import Knockout from './pages/Knockout';
+import { useInterval } from './hooks/useInterval';
 
 export interface GameComponentParams {
   match: Match;
@@ -18,7 +19,7 @@ export interface GameComponentParams {
 function App() {
   const [searchParams] = useSearchParams();
   const code = searchParams.get('code');
-  const { getMatchByCode } = useMatch();
+  const { getMatchByCode, getMatch } = useMatch();
   const { getGame } = useGame();
   const [match, setMatch] = React.useState<Match | undefined>();
   const [game, setGame] = React.useState<Game | undefined>();
@@ -41,6 +42,14 @@ function App() {
       });
     }
   }, [match]);
+
+  useInterval(async () => {
+    if (!player.id || !match || !game) {
+      return;
+    }
+    const m = await getMatch(match?.id);
+    setMatch(m);
+  }, 5000);
 
   const getContent = () => {
     if (game && match) {

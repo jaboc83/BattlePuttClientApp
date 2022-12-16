@@ -7,7 +7,7 @@ export interface Player {
   createdDate?: Date;
 }
 
-const fetchPlayerByUsername = async (username: string) => {
+export const fetchPlayerByUsername = async (username: string) => {
   const results = await axios.get(`${apiBaseUrl}/api/player/s/${username}`);
   if (results.status === 200) {
     return results.data as Player;
@@ -18,12 +18,10 @@ const fetchPlayerByUsername = async (username: string) => {
   throw new Error(results.data);
 };
 
-const createPlayer = async (player: Player) => {
+export const createPlayer = async (player: Player) => {
   const results = await axios.post(`${apiBaseUrl}/api/player`, player);
   if (results.status === 201) {
     return results.data as Player;
   }
   throw new Error(results.data);
 };
-
-export { fetchPlayerByUsername, createPlayer };
