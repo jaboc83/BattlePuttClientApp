@@ -9,8 +9,6 @@ import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { themeOptions } from './theme';
-import { knockout } from './routes';
-import Knockout from './pages/Knockout';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

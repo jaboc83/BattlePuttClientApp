@@ -2,13 +2,20 @@ import axios from 'axios';
 import { apiBaseUrl } from './apiBase';
 import { Player } from './player';
 
+export interface MatchPlayer {
+  id?: string;
+  playerUsername?: string;
+  score?: number;
+}
+
 export interface Match {
   id: string;
   gameId: string;
-  players: Array<Player>;
+  players: Array<MatchPlayer>;
   matchCreated: Date;
   matchStart: Date;
   matchComplete: Date;
+  lastUpdate: Date;
   matchCode: string;
   hostPlayerUsername: string;
   battleId: string;
@@ -38,6 +45,14 @@ export const addPlayerToMatch = async (player: Player, matchId: string) => {
   );
   if (results.status === 200) {
     return results.data as Player;
+  }
+  throw new Error(results.data);
+};
+
+export const updateMatch = async (match: Match) => {
+  const results = await axios.put(`${apiBaseUrl}/api/match/${match.id}`, match);
+  if (results.status === 200) {
+    return results.data as Match;
   }
   throw new Error(results.data);
 };

@@ -1,4 +1,9 @@
-import { fetchMatchByCode, fetchMatch, addPlayerToMatch } from '../api';
+import {
+  fetchMatchByCode,
+  fetchMatch,
+  addPlayerToMatch,
+  updateMatch,
+} from '../api';
 
 export const useMatch = () => {
   return {

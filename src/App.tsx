@@ -1,6 +1,6 @@
 import { Container, CssBaseline, Skeleton } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import { useGame, useMatch } from './hooks';
+import { useGame, useKnockout, useMatch } from './hooks';
 import { Footer, Header } from './layout';
 import * as React from 'react';
 import { Game, Match } from './api';
@@ -18,33 +18,43 @@ export interface GameComponentParams {
 
 function App() {
   const [searchParams] = useSearchParams();
-  const code = searchParams.get('code');
+  const code = searchParams.get('code')?.toUpperCase();
   const { getMatchByCode, getMatch } = useMatch();
   const { getGame } = useGame();
   const [match, setMatch] = React.useState<Match | undefined>();
   const [game, setGame] = React.useState<Game | undefined>();
   const [player, setPlayer] = React.useState<Player>({} as Player);
+  const { getKnockout } = useKnockout();
+  const [content, setContent] = React.useState<React.ReactNode>(<></>);
 
   // Load the match
   React.useEffect(() => {
-    if (code) {
-      getMatchByCode(code).then(m => {
+    const fetchData = async () => {
+      if (code) {
+        const m = await getMatchByCode(code);
         setMatch(m);
-      });
-    }
+        const g = await getGame(m?.gameId);
+        setGame(g);
+        if (!match?.id) return;
+
+        switch (game?.slug) {
+          case 'knockout': {
+            const ko = await getKnockout(match?.id);
+            setContent(<Knockout game={game} match={ko} />);
+            break;
+          }
+          default: {
+            setContent(<NotFound />);
+            break;
+          }
+        }
+      }
+    };
+    fetchData().catch(console.error);
   }, []);
 
-  // Load the game
-  React.useEffect(() => {
-    if (match) {
-      getGame(match.gameId).then(g => {
-        setGame(g);
-      });
-    }
-  }, [match]);
-
   useInterval(async () => {
-    if (!player.id || !match || !game) {
+    if (!player.id || !match || !game || match.matchStart) {
       return;
     }
     const m = await getMatch(match?.id);
@@ -55,10 +65,12 @@ function App() {
     if (game && match) {
       if (player.username) {
         switch (game?.slug) {
-          case 'knockout':
+          case 'knockout': {
             return <Knockout game={game} match={match} />;
-          default:
+          }
+          default: {
             return <NotFound />;
+          }
         }
       }
       return <ConnectToMatch game={game} match={match} />;
@@ -69,20 +81,19 @@ function App() {
   return (
     <PlayerContext.Provider value={{ player, setPlayer }}>
       <CssBaseline />
-      <Container maxWidth="md">
-        <Header />
-        <Container
-          component={'main'}
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignContent: 'center',
-          }}
-        >
-          {getContent()}
-        </Container>
-        <Footer />
+      <Header />
+      <Container
+        component={'main'}
+        maxWidth="sm"
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignContent: 'center',
+        }}
+      >
+        {getContent()}
       </Container>
+      <Footer />
     </PlayerContext.Provider>
   );
 }

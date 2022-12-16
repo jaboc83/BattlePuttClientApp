@@ -14,31 +14,22 @@ const ConnectToMatch = ({ game, match }: ConnectToMatchProps) => {
   const { getPlayerByUsername, createPlayer } = usePlayer();
   const { addPlayerToMatch } = useMatch();
   const { setPlayer } = useCurrentPlayer();
-  const submitHandler = () => {
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const doWork = async (name: string) => {
+      let player = await getPlayerByUsername(name);
+      if (!player) {
+        player = await createPlayer(name);
+      }
+      setPlayer(player);
+      await addPlayerToMatch(player, match.id);
+    };
     if (username) {
-      getPlayerByUsername(username)
-        .then(player => {
-          if (player) {
-            setPlayer(player);
-            return;
-          }
-          return createPlayer(username);
-        })
-        .then(player => {
-          if (player) {
-            setPlayer(player);
-          }
-          return player;
-        })
-        .then(player => {
-          if (player) {
-            return addPlayerToMatch(player, match.id);
-          }
-        })
-        .catch(err => console.error(err));
+      doWork(username).catch(console.error);
     }
-    return false;
   };
+
   return (
     <Box sx={{ margin: 'auto' }}>
       <Typography sx={{ mb: 2 }} variant="h5" align="center" gutterBottom>
@@ -54,12 +45,7 @@ const ConnectToMatch = ({ game, match }: ConnectToMatchProps) => {
         </Typography>
         ?
       </Typography>
-      <form
-        onSubmit={e => {
-          e.preventDefault();
-          submitHandler();
-        }}
-      >
+      <form onSubmit={submitHandler}>
         <TextField
           id="username"
           margin="none"
