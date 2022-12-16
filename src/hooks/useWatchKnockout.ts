@@ -9,7 +9,6 @@ export const useWatchKnockout = (
   const { getKnockout } = useKnockout();
   useInterval(async () => {
     if (knockout?.id) {
-      console.warn(knockout);
       const m = await getKnockout(knockout.id);
       setMatch(m);
     }

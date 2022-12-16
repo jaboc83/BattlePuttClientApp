@@ -8,7 +8,7 @@ import ConnectToMatch from './pages/ConnectToMatch';
 import { PlayerContext } from './contexts/PlayerContext';
 import { Player } from './api/player';
 import NotFound from './pages/NotFound';
-import Knockout from './pages/Knockout';
+import Knockout from './pages/Knockout/Knockout';
 import { useInterval } from './hooks/useInterval';
 
 export interface GameComponentParams {
@@ -40,7 +40,7 @@ function App() {
         switch (game?.slug) {
           case 'knockout': {
             const ko = await getKnockout(match?.id);
-            setContent(<Knockout game={game} match={ko} />);
+            setContent(<Knockout game={game} knockout={ko} />);
             break;
           }
           default: {
@@ -66,7 +66,7 @@ function App() {
       if (player.username) {
         switch (game?.slug) {
           case 'knockout': {
-            return <Knockout game={game} match={match} />;
+            return <Knockout game={game} knockout={match} />;
           }
           default: {
             return <NotFound />;
