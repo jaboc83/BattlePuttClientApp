@@ -15,6 +15,10 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
   const { completeTurn } = useKnockout();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+  React.useEffect(() => {
+    setIsSubmitting(false);
+  }, [knockout]);
+
   return (
     <>
       <Typography variant="h4" align="center" gutterBottom>
@@ -30,7 +34,11 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
             How many putts did you make this round?
           </Typography>
           <Grid container spacing={2}>
-            {Array.from(Array((knockout.numberOfDiscs || 5) + 1).keys())
+            {Array.from(
+              Array(
+                (knockout.remainingPutters![knockout.currentPlayer!] || 5) + 1,
+              ).keys(),
+            )
               .map(x => x)
               .map(g => (
                 <Grid key={g} item sm={6} xs={6}>

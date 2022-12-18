@@ -6,6 +6,7 @@ export interface Knockout extends Match {
   distance?: number;
   numberOfDiscs?: number;
   currentPlayer?: string;
+  remainingPutters?: { [key: string]: number };
 }
 
 export const fetchKnockout = async (id: string) => {

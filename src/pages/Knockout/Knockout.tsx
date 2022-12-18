@@ -6,6 +6,7 @@ import HostStartScreen from './HostStartScreen';
 import GuestStartScreen from './GuestStartScreen';
 import CurrentPlayerScreen from './CurrentPlayerScreen';
 import WaitingPlayerScreen from './WaitingPlayerScreen';
+import Typography from '@mui/material/Typography';
 
 interface KnockoutPageParams {
   game: Game;
@@ -43,6 +44,26 @@ const getPlayerScreen = (
   );
 };
 
+const getFinishScreen = (
+  game: Game,
+  knockout: Knockout,
+  player: Player | null,
+) => {
+  const isWinner =
+    knockout.players
+      .sort((a, b) => Number(b.score) - Number(a.score))[0]
+      .playerUsername?.toLowerCase() === player?.username?.toLowerCase();
+  return isWinner ? (
+    <Typography variant="h3" color="secondary" align="center">
+      You Win!
+    </Typography>
+  ) : (
+    <Typography variant="h3" color="secondary" align="center">
+      You Lose.
+    </Typography>
+  );
+};
+
 const KnockoutPage: React.FC<KnockoutPageParams> = ({
   game,
   knockout: incomingKnockout,
@@ -62,9 +83,14 @@ const KnockoutPage: React.FC<KnockoutPageParams> = ({
         width: '100%',
       }}
     >
-      {!knockout.matchStart
-        ? getStartScreen(game, knockout, player)
-        : getPlayerScreen(game, knockout, player)}
+      {/* Ready to start */}
+      {!knockout.matchStart ? getStartScreen(game, knockout, player) : null}
+      {/* Game in progress */}
+      {knockout.matchStart && !knockout.matchComplete
+        ? getPlayerScreen(game, knockout, player)
+        : null}
+      {/* Game complete*/}
+      {knockout.matchComplete ? getFinishScreen(game, knockout, player) : null}
     </Box>
   );
 };

@@ -12,5 +12,5 @@ export const useWatchKnockout = (
       const m = await getKnockout(knockout.id);
       setMatch(m);
     }
-  }, 5000);
+  }, 3000);
 };
