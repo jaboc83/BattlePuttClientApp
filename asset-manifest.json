@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/BattlePuttClientApp/static/css/main.dca7258d.css",
-    "main.js": "/BattlePuttClientApp/static/js/main.dd4ba627.js",
+    "main.js": "/BattlePuttClientApp/static/js/main.de97b240.js",
     "static/js/787.799a881e.chunk.js": "/BattlePuttClientApp/static/js/787.799a881e.chunk.js",
     "static/media/roboto-all-500-normal.woff": "/BattlePuttClientApp/static/media/roboto-all-500-normal.0ab669b7a0d19b178f57.woff",
     "static/media/roboto-all-700-normal.woff": "/BattlePuttClientApp/static/media/roboto-all-700-normal.a457fde362a540fcadff.woff",
@@ -37,11 +37,11 @@
     "static/media/roboto-greek-ext-700-normal.woff2": "/BattlePuttClientApp/static/media/roboto-greek-ext-700-normal.bd9854c751441ccc1a70.woff2",
     "index.html": "/BattlePuttClientApp/index.html",
     "main.dca7258d.css.map": "/BattlePuttClientApp/static/css/main.dca7258d.css.map",
-    "main.dd4ba627.js.map": "/BattlePuttClientApp/static/js/main.dd4ba627.js.map",
+    "main.de97b240.js.map": "/BattlePuttClientApp/static/js/main.de97b240.js.map",
     "787.799a881e.chunk.js.map": "/BattlePuttClientApp/static/js/787.799a881e.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.dca7258d.css",
-    "static/js/main.dd4ba627.js"
+    "static/js/main.de97b240.js"
   ]
 }
