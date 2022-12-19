@@ -21,12 +21,12 @@ const getStartScreen = (
   const isHost =
     Boolean(knockout?.hostPlayerUsername) &&
     Boolean(player?.username) &&
-    knockout?.hostPlayerUsername.toLowerCase() ==
+    knockout?.hostPlayerUsername?.toLowerCase() ==
       player?.username?.toLowerCase();
   return isHost ? (
     <HostStartScreen game={game} knockout={knockout} />
   ) : (
-    <GuestStartScreen hostName={knockout.hostPlayerUsername} />
+    <GuestStartScreen hostName={knockout.hostPlayerUsername!} />
   );
 };
 
@@ -44,23 +44,22 @@ const getPlayerScreen = (
   );
 };
 
-const getFinishScreen = (
-  game: Game,
-  knockout: Knockout,
-  player: Player | null,
-) => {
+const getFinishScreen = (knockout: Knockout, player: Player | null) => {
+  const winner = knockout.players.sort(
+    (a, b) => Number(b.score) - Number(a.score),
+  )[0];
   const isWinner =
-    knockout.players
-      .sort((a, b) => Number(b.score) - Number(a.score))[0]
-      .playerUsername?.toLowerCase() === player?.username?.toLowerCase();
+    winner.username?.toLowerCase() === player?.username?.toLowerCase();
   return isWinner ? (
     <Typography variant="h3" color="secondary" align="center">
-      You Win!
+      You win with {winner.score} points!
     </Typography>
   ) : (
-    <Typography variant="h3" color="secondary" align="center">
-      You Lose.
-    </Typography>
+    <>
+      <Typography variant="h3" color="secondary" align="center">
+        {winner.username} wins with {winner.score} points.
+      </Typography>
+    </>
   );
 };
 
@@ -68,6 +67,7 @@ const KnockoutPage: React.FC<KnockoutPageParams> = ({
   game,
   knockout: incomingKnockout,
 }) => {
+  console.log('Incoming Knockout', incomingKnockout);
   const { player } = useCurrentPlayer();
   const [knockout, setKnockout] = React.useState(incomingKnockout);
 
@@ -90,7 +90,7 @@ const KnockoutPage: React.FC<KnockoutPageParams> = ({
         ? getPlayerScreen(game, knockout, player)
         : null}
       {/* Game complete*/}
-      {knockout.matchComplete ? getFinishScreen(game, knockout, player) : null}
+      {knockout.matchComplete ? getFinishScreen(knockout, player) : null}
     </Box>
   );
 };

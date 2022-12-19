@@ -1,10 +1,10 @@
-import { fetchPlayerByUsername, createPlayer } from '../api';
+import { fetchPlayer, createPlayer } from '../api';
 
 export const usePlayer = () => {
   return {
-    getPlayerByUsername: fetchPlayerByUsername,
+    getPlayer: fetchPlayer,
     createPlayer: (username: string) => {
-      return createPlayer({ username, createdDate: new Date() });
+      return createPlayer({ username });
     },
   };
 };

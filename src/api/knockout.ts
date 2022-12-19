@@ -3,14 +3,18 @@ import { apiBaseUrl } from './apiBase';
 import { Match } from './match';
 
 export interface Knockout extends Match {
-  distance?: number;
-  numberOfDiscs?: number;
+  distance: number;
+  numberOfDiscs: number;
   currentPlayer?: string;
-  remainingPutters?: { [key: string]: number };
+  remainingPutters: { [key: string]: number };
 }
 
-export const fetchKnockout = async (id: string) => {
-  const results = await axios.get(`${apiBaseUrl}/api/knockout/${id}`);
+export const fetchKnockout = async (matchId: string, lastUpdate?: Date) => {
+  let url = `${apiBaseUrl}/api/knockout/${matchId}`;
+  if (lastUpdate) {
+    url += `?lastUpdate=${encodeURIComponent(lastUpdate.toString())}`;
+  }
+  const results = await axios.get(url);
   if (results.status === 200) {
     return results.data as Knockout;
   }
@@ -18,7 +22,7 @@ export const fetchKnockout = async (id: string) => {
 };
 
 export const updateKnockout = async (ko: Knockout) => {
-  const results = await axios.put(`${apiBaseUrl}/api/knockout/${ko.id}`, ko);
+  const results = await axios.put(`${apiBaseUrl}/api/knockout`, ko);
   if (results.status === 200) {
     return results.data as Knockout;
   }

@@ -11,19 +11,16 @@ interface ConnectToMatchProps {
 
 const ConnectToMatch = ({ game, match }: ConnectToMatchProps) => {
   const [username, setUsername] = React.useState<string | undefined>();
-  const { getPlayerByUsername, createPlayer } = usePlayer();
+  const { createPlayer } = usePlayer();
   const { addPlayerToMatch } = useMatch();
   const { setPlayer } = useCurrentPlayer();
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const doWork = async (name: string) => {
-      let player = await getPlayerByUsername(name);
-      if (!player) {
-        player = await createPlayer(name);
-      }
+      const player = await createPlayer(name);
       setPlayer(player);
-      await addPlayerToMatch(player, match.id);
+      await addPlayerToMatch(player, match.matchId);
     };
     if (username) {
       doWork(username).catch(console.error);

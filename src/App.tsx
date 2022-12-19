@@ -18,8 +18,8 @@ export interface GameComponentParams {
 
 function App() {
   const [searchParams] = useSearchParams();
-  const code = searchParams.get('code')?.toUpperCase();
-  const { getMatchByCode, getMatch } = useMatch();
+  const matchId = searchParams.get('matchId')?.toUpperCase();
+  const { getMatch } = useMatch();
   const { getGame } = useGame();
   const [match, setMatch] = React.useState<Match | undefined>();
   const [game, setGame] = React.useState<Game | undefined>();
@@ -30,17 +30,17 @@ function App() {
   // Load the match
   React.useEffect(() => {
     const fetchData = async () => {
-      if (code) {
-        const m = await getMatchByCode(code);
+      if (matchId) {
+        const m = await getMatch(matchId);
         setMatch(m);
-        const g = await getGame(m?.gameId);
+        const g = await getGame(m?.gameSlug);
         setGame(g);
-        if (!match?.id) return;
+        if (!matchId) return;
 
-        switch (game?.slug) {
+        switch (g?.slug) {
           case 'knockout': {
-            const ko = await getKnockout(match?.id);
-            setContent(<Knockout game={game} knockout={ko} />);
+            const ko = await getKnockout(matchId);
+            setContent(<Knockout game={g} knockout={ko} />);
             break;
           }
           default: {
@@ -54,10 +54,10 @@ function App() {
   }, []);
 
   useInterval(async () => {
-    if (!player.id || !match || !game || match.matchStart) {
+    if (!player.username || !match || !game || match.matchStart) {
       return;
     }
-    const m = await getMatch(match?.id);
+    const m = await getMatch(match.matchId, match.lastUpdate);
     setMatch(m);
   }, 5000);
 
@@ -66,10 +66,10 @@ function App() {
       if (player.username) {
         switch (game?.slug) {
           case 'knockout': {
-            return <Knockout game={game} knockout={match} />;
+            return content;
           }
           default: {
-            return <NotFound />;
+            return content;
           }
         }
       }

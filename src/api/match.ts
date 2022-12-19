@@ -3,35 +3,30 @@ import { apiBaseUrl } from './apiBase';
 import { Player } from './player';
 
 export interface MatchPlayer {
-  id?: string;
-  playerUsername?: string;
+  username?: string;
   score?: number;
 }
 
 export interface Match {
-  id: string;
-  gameId: string;
-  players: Array<MatchPlayer>;
-  matchCreated: Date;
-  matchStart: Date;
-  matchComplete: Date;
-  lastUpdate: Date;
+  matchId: string;
+  battleCode: string;
+  gameSlug: string;
   matchCode: string;
-  hostPlayerUsername: string;
-  battleId: string;
+  matchCreated: Date;
+  matchStart?: Date;
+  matchComplete?: Date;
+  players: Array<MatchPlayer>;
+  hostPlayerUsername?: string;
   playersWhoConfirmedScore: Array<string>;
+  lastUpdate: Date;
 }
 
-export const fetchMatch = async (id: string) => {
-  const results = await axios.get(`${apiBaseUrl}/api/match/${id}`);
-  if (results.status === 200) {
-    return results.data as Match;
+export const fetchMatch = async (matchId: string, lastUpdate?: Date) => {
+  let url = `${apiBaseUrl}/api/knockout/${matchId}`;
+  if (lastUpdate) {
+    url += `?lastUpdate=${encodeURIComponent(lastUpdate.toString())}`;
   }
-  throw new Error(results.data);
-};
-
-export const fetchMatchByCode = async (code: string) => {
-  const results = await axios.get(`${apiBaseUrl}/api/match/s/${code}`);
+  const results = await axios.get(url);
   if (results.status === 200) {
     return results.data as Match;
   }
@@ -44,13 +39,13 @@ export const addPlayerToMatch = async (player: Player, matchId: string) => {
     player,
   );
   if (results.status === 200) {
-    return results.data as Player;
+    return results.data as Match;
   }
   throw new Error(results.data);
 };
 
 export const updateMatch = async (match: Match) => {
-  const results = await axios.put(`${apiBaseUrl}/api/match/${match.id}`, match);
+  const results = await axios.put(`${apiBaseUrl}/api/match`, match);
   if (results.status === 200) {
     return results.data as Match;
   }

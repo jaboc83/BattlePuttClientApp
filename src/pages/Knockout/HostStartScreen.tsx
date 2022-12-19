@@ -78,7 +78,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         variant="contained"
         onClick={() => {
           setIsStarting(true);
-          startKnockout(knockout.id, distance, numberOfDiscs);
+          startKnockout(knockout.matchId, distance, numberOfDiscs);
         }}
         disabled={isStarting}
       >
