@@ -7,6 +7,7 @@ import GuestStartScreen from './GuestStartScreen';
 import CurrentPlayerScreen from './CurrentPlayerScreen';
 import WaitingPlayerScreen from './WaitingPlayerScreen';
 import Typography from '@mui/material/Typography';
+import { WbIncandescentRounded } from '@mui/icons-material';
 
 interface KnockoutPageParams {
   game: Game;
@@ -45,29 +46,54 @@ const getPlayerScreen = (
 };
 
 const getFinishScreen = (knockout: Knockout, player: Player | null) => {
+  const currentPlayer = knockout.players.find(
+    p => p?.username?.toLowerCase() === player?.username?.toLowerCase(),
+  );
+  const singlePlayer = knockout.players.length == 1;
+  if (singlePlayer) {
+    return (
+      <Typography variant="h3" color="secondary" align="center">
+        You finished with {currentPlayer?.score} points!
+      </Typography>
+    );
+  }
+  const sortedPlayers = knockout.players.sort(
+    (a, b) => Number(b.score) - Number(a.score),
+  );
+  const isTie =
+    sortedPlayers.length > 1 &&
+    sortedPlayers[0].score == sortedPlayers[1].score;
   const winner = knockout.players.sort(
     (a, b) => Number(b.score) - Number(a.score),
   )[0];
   const isWinner =
     winner.username?.toLowerCase() === player?.username?.toLowerCase();
-  return isWinner ? (
-    <Typography variant="h3" color="secondary" align="center">
-      You win with {winner.score} points!
-    </Typography>
-  ) : (
-    <>
+  if (isTie && winner.score === currentPlayer?.score) {
+    return (
       <Typography variant="h3" color="secondary" align="center">
-        {winner.username} wins with {winner.score} points.
+        You tied with {winner.score} points!
       </Typography>
-    </>
-  );
+    );
+  } else if (isWinner) {
+    return (
+      <Typography variant="h3" color="secondary" align="center">
+        You win with {winner.score} points!
+      </Typography>
+    );
+  } else {
+    return (
+      <Typography variant="h3" color="secondary" align="center">
+        {isTie ? 'Winners tied ' : `${winner.username} won`} with {winner.score}{' '}
+        points.
+      </Typography>
+    );
+  }
 };
 
 const KnockoutPage: React.FC<KnockoutPageParams> = ({
   game,
   knockout: incomingKnockout,
 }) => {
-  console.log('Incoming Knockout', incomingKnockout);
   const { player } = useCurrentPlayer();
   const [knockout, setKnockout] = React.useState(incomingKnockout);
 

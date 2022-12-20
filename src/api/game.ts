@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { apiBaseUrl } from './apiBase';
+import axios from 'axios';
+import { apiBaseUrl, client } from './apiBase';
 
 export interface Game {
   id: string;
@@ -12,7 +12,7 @@ export interface Game {
 
 export const fetchAllGames = async () => {
   const requestConfig = {};
-  const results = await axios.get(`${apiBaseUrl}/api/game`, requestConfig);
+  const results = await client.get(`${apiBaseUrl}/api/game`, requestConfig);
   if (results.status === 200) {
     return results.data as Array<Game>;
   }
@@ -21,7 +21,7 @@ export const fetchAllGames = async () => {
 
 export const fetchGameById = async (id: string) => {
   const requestConfig = {};
-  const results = await axios.get(
+  const results = await client.get(
     `${apiBaseUrl}/api/game/${id}`,
     requestConfig,
   );
@@ -33,7 +33,7 @@ export const fetchGameById = async (id: string) => {
 
 export const fetchGameBySlug = async (id: string) => {
   const requestConfig = {};
-  const results = await axios.get(
+  const results = await client.get(
     `${apiBaseUrl}/api/game/s/${id}`,
     requestConfig,
   );

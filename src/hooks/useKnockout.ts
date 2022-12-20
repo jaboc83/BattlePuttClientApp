@@ -1,5 +1,10 @@
-import { knockout } from './../routes';
-import { Knockout, fetchKnockout, updateKnockout } from '../api';
+import {
+  Knockout,
+  fetchKnockout,
+  updateKnockout,
+  fetchAllFromUser,
+  fetchTopScore,
+} from '../api';
 
 // Start a new knockout from a match
 const startKnockout = async (
@@ -22,7 +27,6 @@ const startKnockout = async (
   currentMatch.currentPlayer = currentMatch.players[randomPlayerIndex].username;
 
   // Set starting putter count for each player
-  console.log(currentMatch);
   currentMatch.players.forEach(p => {
     currentMatch.remainingPutters![p.username!] = numberOfDiscs;
   });
@@ -52,6 +56,9 @@ const completeTurn = (madePutts: number, knockout: Knockout) => {
   });
   if (gameFinished) {
     knockout.matchComplete = new Date();
+    knockout.winningScore = knockout.players.reduce((total, player) => {
+      return Math.max(total, player.score || 0);
+    }, 0);
     return updateKnockout(knockout);
   }
 
@@ -77,6 +84,8 @@ const completeTurn = (madePutts: number, knockout: Knockout) => {
 export const useKnockout = () => {
   return {
     getKnockout: fetchKnockout,
+    getAllFromUser: fetchAllFromUser,
+    getTopScore: fetchTopScore,
     startKnockout,
     completeTurn,
   };

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { apiBaseUrl } from './apiBase';
+import client, { apiBaseUrl } from './apiBase';
 import { Player } from './player';
 
 export interface MatchPlayer {
@@ -24,9 +24,9 @@ export interface Match {
 export const fetchMatch = async (matchId: string, lastUpdate?: Date) => {
   let url = `${apiBaseUrl}/api/knockout/${matchId}`;
   if (lastUpdate) {
-    url += `?lastUpdate=${encodeURIComponent(lastUpdate.toString())}`;
+    url += `?lastUpdate=${encodeURIComponent(lastUpdate.toISOString())}`;
   }
-  const results = await axios.get(url);
+  const results = await client.get(url);
   if (results.status === 200) {
     return results.data as Match;
   }
@@ -34,7 +34,7 @@ export const fetchMatch = async (matchId: string, lastUpdate?: Date) => {
 };
 
 export const addPlayerToMatch = async (player: Player, matchId: string) => {
-  const results = await axios.put(
+  const results = await client.put(
     `${apiBaseUrl}/api/match/addplayer/${matchId}`,
     player,
   );
@@ -45,7 +45,7 @@ export const addPlayerToMatch = async (player: Player, matchId: string) => {
 };
 
 export const updateMatch = async (match: Match) => {
-  const results = await axios.put(`${apiBaseUrl}/api/match`, match);
+  const results = await client.put(`${apiBaseUrl}/api/match`, match);
   if (results.status === 200) {
     return results.data as Match;
   }
