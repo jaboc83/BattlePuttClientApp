@@ -14,6 +14,9 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
 }) => {
   const { completeTurn } = useKnockout();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [selectedNumber, setSelectedNumber] = React.useState<
+    number | undefined
+  >();
 
   React.useEffect(() => {
     setIsSubmitting(false);
@@ -46,16 +49,40 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
                     variant="contained"
                     size="large"
                     fullWidth={true}
-                    sx={{ height: '5rem', fontSize: 28, fontWeight: 600 }}
+                    color={selectedNumber === g ? 'success' : 'primary'}
+                    sx={{
+                      height: '5rem',
+                      fontSize: 28,
+                      fontWeight: 600,
+                    }}
                     onClick={() => {
-                      completeTurn(g, knockout);
-                      setIsSubmitting(true);
+                      setSelectedNumber(g);
                     }}
                   >
-                    {g}
+                    {g === 0 ? 'None' : g}
                   </Button>
                 </Grid>
               ))}
+            <Grid item sm={12} xs={12}>
+              <Button
+                variant="outlined"
+                size="large"
+                fullWidth={true}
+                color="secondary"
+                sx={{
+                  height: '5rem',
+                  fontSize: 28,
+                  fontWeight: 600,
+                }}
+                disabled={selectedNumber === undefined}
+                onClick={() => {
+                  completeTurn(selectedNumber!, knockout);
+                  setIsSubmitting(true);
+                }}
+              >
+                Finish Turn
+              </Button>
+            </Grid>
           </Grid>
         </>
       )}
