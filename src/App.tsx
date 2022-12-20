@@ -1,6 +1,6 @@
 import { Container, CssBaseline, Skeleton } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import { useGame, useKnockout, useMatch } from './hooks';
+import { useFiftyPutts, useGame, useKnockout, useMatch } from './hooks';
 import { Footer, Header } from './layout';
 import * as React from 'react';
 import { Game, Match } from './api';
@@ -8,8 +8,9 @@ import ConnectToMatch from './pages/ConnectToMatch';
 import { PlayerContext } from './contexts/PlayerContext';
 import { Player } from './api/player';
 import NotFound from './pages/NotFound';
-import Knockout from './pages/Knockout/Knockout';
+import KnockoutPage from './pages/Knockout/KnockoutPage';
 import { useInterval } from './hooks/useInterval';
+import FiftyPuttsPage from './pages/FiftyPutts/FiftyPutts';
 
 export interface GameComponentParams {
   match: Match;
@@ -25,6 +26,7 @@ function App() {
   const [game, setGame] = React.useState<Game | undefined>();
   const [player, setPlayer] = React.useState<Player>({} as Player);
   const { getKnockout } = useKnockout();
+  const { getFiftyPutts } = useFiftyPutts();
   const [content, setContent] = React.useState<React.ReactNode>(<></>);
 
   // Load the match
@@ -40,7 +42,12 @@ function App() {
         switch (g?.slug) {
           case 'knockout': {
             const ko = await getKnockout(matchId);
-            setContent(<Knockout game={g} knockout={ko} />);
+            setContent(<KnockoutPage game={g} knockout={ko} />);
+            break;
+          }
+          case 'fiftyputts': {
+            const fp = await getFiftyPutts(matchId);
+            setContent(<FiftyPuttsPage game={g} fiftyPutts={fp} />);
             break;
           }
           default: {
@@ -66,6 +73,9 @@ function App() {
       if (player.username) {
         switch (game?.slug) {
           case 'knockout': {
+            return content;
+          }
+          case 'fiftyputts': {
             return content;
           }
           default: {

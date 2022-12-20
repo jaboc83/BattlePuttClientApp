@@ -3,11 +3,10 @@ import { useCurrentPlayer, useWatchKnockout } from '../../hooks';
 import { Game, Knockout, Player } from '../../api';
 import * as React from 'react';
 import HostStartScreen from './HostStartScreen';
-import GuestStartScreen from './GuestStartScreen';
+import GuestStartScreen from '../GuestStartScreen';
 import CurrentPlayerScreen from './CurrentPlayerScreen';
 import WaitingPlayerScreen from './WaitingPlayerScreen';
 import Typography from '@mui/material/Typography';
-import { WbIncandescentRounded } from '@mui/icons-material';
 
 interface KnockoutPageParams {
   game: Game;

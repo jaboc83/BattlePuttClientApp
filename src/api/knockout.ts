@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { apiBaseUrl, client } from './apiBase';
 import { Match } from './match';
 
@@ -22,7 +21,7 @@ export const fetchKnockout = async (matchId: string, lastUpdate?: Date) => {
   throw new Error(results.data);
 };
 
-export const fetchAllFromUser = async (username: string) => {
+export const fetchAllKnockoutsFromUser = async (username: string) => {
   const url = `${apiBaseUrl}/api/knockout?username=${encodeURIComponent(
     username,
   )}`;
@@ -33,7 +32,7 @@ export const fetchAllFromUser = async (username: string) => {
   throw new Error(results.data);
 };
 
-export const fetchTopScore = async () => {
+export const fetchKnockoutTopScore = async () => {
   const url = `${apiBaseUrl}/api/knockout?topScore=true`;
   const results = await client.get(url);
   if (results.status === 200) {

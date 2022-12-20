@@ -2,8 +2,8 @@ import {
   Knockout,
   fetchKnockout,
   updateKnockout,
-  fetchAllFromUser,
-  fetchTopScore,
+  fetchAllKnockoutsFromUser,
+  fetchKnockoutTopScore,
 } from '../api';
 
 // Start a new knockout from a match
@@ -84,8 +84,8 @@ const completeTurn = (madePutts: number, knockout: Knockout) => {
 export const useKnockout = () => {
   return {
     getKnockout: fetchKnockout,
-    getAllFromUser: fetchAllFromUser,
-    getTopScore: fetchTopScore,
+    getAllFromUser: fetchAllKnockoutsFromUser,
+    getTopScore: fetchKnockoutTopScore,
     startKnockout,
     completeTurn,
   };

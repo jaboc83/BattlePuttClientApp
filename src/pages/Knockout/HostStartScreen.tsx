@@ -24,12 +24,14 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
   const [distance, setDistance] = React.useState('18');
   const isValidDistance = () => {
     return (
-      parseInt(distance) && Number(distance) <= 70 && Number(distance) > 10
+      !Number.isNaN(parseInt(distance)) &&
+      Number(distance) <= 70 &&
+      Number(distance) >= 10
     );
   };
   const isValidDiscCount = () => {
     return (
-      parseInt(numberOfDiscs) &&
+      !Number.isNaN(parseInt(numberOfDiscs)) &&
       Number(numberOfDiscs) <= 5 &&
       Number(numberOfDiscs) > 0
     );
