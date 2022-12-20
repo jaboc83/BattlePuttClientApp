@@ -20,8 +20,20 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
 }) => {
   const { startKnockout } = useKnockout();
   const [isStarting, setIsStarting] = React.useState(false);
-  const [numberOfDiscs, setNumberOfDiscs] = React.useState(5);
-  const [distance, setDistance] = React.useState(18);
+  const [numberOfDiscs, setNumberOfDiscs] = React.useState('5');
+  const [distance, setDistance] = React.useState('18');
+  const isValidDistance = () => {
+    return (
+      parseInt(distance) && Number(distance) <= 70 && Number(distance) > 10
+    );
+  };
+  const isValidDiscCount = () => {
+    return (
+      parseInt(numberOfDiscs) &&
+      Number(numberOfDiscs) <= 5 &&
+      Number(numberOfDiscs) > 0
+    );
+  };
 
   return (
     <>
@@ -35,12 +47,11 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         gutterBottom
         marginBottom={3}
       >
-        You are the host
+        You are the host; once everyone is connected click start.
       </Typography>
       <Grid container columns={{ sx: 6, sm: 12 }} spacing={5} sx={{ mb: 3 }}>
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
-            type="number"
             id="distance"
             margin="none"
             label="Distance from Basket"
@@ -48,26 +59,39 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
             color="primary"
             sx={{ width: '100%' }}
             defaultValue={18}
+            error={!isValidDistance()}
+            helperText={
+              !isValidDistance()
+                ? 'Distance must be between 10 and 70 feet'
+                : null
+            }
+            inputProps={{ maxLength: 2 }}
             InputProps={{
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
-              setDistance(Number(event.target.value));
+              setDistance(event.target.value);
             }}
           />
         </Grid>
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
-            type="number"
             id="numberOfDiscs"
             margin="none"
             label="Number of Discs"
             name="numberOfDiscs"
             color="primary"
+            error={!isValidDiscCount()}
+            helperText={
+              !isValidDiscCount()
+                ? 'Number of Discs must be between 1 and 5'
+                : null
+            }
             defaultValue={5}
             sx={{ width: '100%' }}
+            inputProps={{ maxLength: 1 }}
             onChange={event => {
-              setNumberOfDiscs(Number(event.target.value));
+              setNumberOfDiscs(event.target.value);
             }}
           />
         </Grid>
@@ -78,7 +102,11 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         variant="contained"
         onClick={() => {
           setIsStarting(true);
-          startKnockout(knockout.matchId, distance, numberOfDiscs);
+          startKnockout(
+            knockout.matchId,
+            Number(distance),
+            Number(numberOfDiscs),
+          );
         }}
         disabled={isStarting}
       >
