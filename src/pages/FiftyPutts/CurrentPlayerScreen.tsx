@@ -1,4 +1,10 @@
-import { Button, Grid, Typography } from '@mui/material';
+import {
+  Button,
+  Grid,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@mui/material';
 import * as React from 'react';
 import { Game, FiftyPutts } from '../../api';
 import { useFiftyPutts } from '../../hooks';
@@ -16,7 +22,14 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [madeFirst, setMadeFirst] = React.useState(false);
   const [madeLast, setMadeLast] = React.useState(false);
-  const [totalMade, setTotalMade] = React.useState<number | null>();
+  const [totalMade, setTotalMade] = React.useState<string | null>();
+  const isValidTotalMade = () => {
+    return (
+      !Number.isNaN(totalMade) &&
+      Number(totalMade) >= 0 &&
+      Number(totalMade) <= 10
+    );
+  };
 
   React.useEffect(() => {
     if (isSubmitting) {
@@ -30,7 +43,7 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
   return (
     <>
       <Typography variant="h4" align="center" gutterBottom>
-        {`${fiftyPutts?.distances[fiftyPutts.currentStation]}' ${game.name}`}
+        {` ${game.name}`}
       </Typography>
       {isSubmitting ? (
         <Typography variant="h5" color="primary" align="center">
@@ -39,12 +52,13 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
       ) : (
         <>
           <Typography variant="h6" align="center" gutterBottom>
-            How many putts did you make this round?
+            How many putts did you make at{' '}
+            {`${fiftyPutts?.distances[fiftyPutts.currentStation]}'`}?
           </Typography>
           <Grid container spacing={2}>
-            <Grid item sm={6} xs={6}>
+            <Grid item sm={12} xs={12}>
               <Button
-                variant="contained"
+                variant={madeFirst ? 'contained' : 'outlined'}
                 size="large"
                 fullWidth={true}
                 color={madeFirst ? 'success' : 'primary'}
@@ -60,9 +74,9 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
                 Made First
               </Button>
             </Grid>
-            <Grid item sm={6} xs={6}>
+            <Grid item sm={12} xs={12}>
               <Button
-                variant="contained"
+                variant={madeLast ? 'contained' : 'outlined'}
                 size="large"
                 fullWidth={true}
                 color={madeLast ? 'success' : 'primary'}
@@ -78,6 +92,27 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
                 Made Last
               </Button>
             </Grid>
+            <Grid item xs={12} sm={12}>
+              <TextField
+                id="totalMade"
+                margin="none"
+                label="Total Putts Made"
+                name="totalMade"
+                color="primary"
+                sx={{ width: '100%' }}
+                defaultValue={null}
+                error={totalMade !== undefined && !isValidTotalMade()}
+                helperText={
+                  totalMade !== undefined && !isValidTotalMade()
+                    ? 'Only 10 possible putts can be made'
+                    : null
+                }
+                inputProps={{ maxLength: 2 }}
+                onChange={event => {
+                  setTotalMade(event.target.value);
+                }}
+              />
+            </Grid>
             <Grid item sm={12} xs={12}>
               <Button
                 variant="outlined"
@@ -89,7 +124,11 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
                   fontSize: 28,
                   fontWeight: 600,
                 }}
-                disabled={totalMade === undefined}
+                disabled={
+                  totalMade === undefined ||
+                  totalMade === '' ||
+                  !isValidTotalMade()
+                }
                 onClick={() => {
                   completeTurn(
                     {

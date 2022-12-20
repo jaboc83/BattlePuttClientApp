@@ -33,25 +33,24 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
               return b.matchComplete!.getTime() - a.matchComplete!.getTime();
             })
             .slice(0)
-            .map(ko => {
+            .map(fp => {
               return {
                 username: player.username!,
-                score: ko.players!.find(
+                score: fp.players!.find(
                   p =>
                     player.username?.toLowerCase() ===
                     p.username?.toLowerCase(),
                 )!.score!,
-                date: ko.matchComplete!,
+                date: fp.matchComplete!,
               };
             }),
         );
-        const topScoreKo = await getTopScore();
-        console.log('topScoreKO : ', topScoreKo);
+        const topScoreFp = await getTopScore();
         setTopScore({
-          date: topScoreKo.matchComplete,
-          score: topScoreKo.winningScore,
-          username: topScoreKo.players
-            .filter(p => p.score === topScoreKo.winningScore)
+          date: topScoreFp.matchComplete,
+          score: topScoreFp.winningScore,
+          username: topScoreFp.players
+            .filter(p => p.score === topScoreFp.winningScore)
             .map(p => p.username)
             .join(', '),
         });
@@ -76,7 +75,7 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
         <Card sx={{ p: 1, m: 1 }}>
           <CardContent>
             <Typography align="center" variant="h6">
-              Top FiftyPutts Score
+              Top Fifty Putts Score
             </Typography>
             <Typography align="center">
               {`${topScore?.score} points by ${topScore.username} ${

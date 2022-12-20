@@ -15,6 +15,9 @@ const startFiftyPutts = async (matchId: string, distances: Array<number>) => {
   // Configure based on host input
   currentMatch.distances = distances;
 
+  // Setup the 5 stations
+  currentMatch.stationScores = Array.from(Array(5).keys()).map(x => []);
+
   // Choose a starting player at random
   const randomPlayerIndex = Math.floor(
     Math.random() * currentMatch.players.length,
@@ -61,7 +64,7 @@ const completeTurn = (score: StationScore, fiftyPutts: FiftyPutts) => {
     fiftyPutts.stationScores[fiftyPutts.currentStation].length ===
     fiftyPutts.players.length
   ) {
-    if (fiftyPutts.currentStation === 5) {
+    if (fiftyPutts.currentStation === 4) {
       fiftyPutts.matchComplete = new Date();
     } else {
       fiftyPutts.currentStation += 1;
