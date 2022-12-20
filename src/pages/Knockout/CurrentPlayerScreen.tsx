@@ -19,8 +19,10 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
   >();
 
   React.useEffect(() => {
+    if (isSubmitting) {
+      setSelectedNumber(undefined);
+    }
     setIsSubmitting(false);
-    setSelectedNumber(undefined);
   }, [knockout]);
 
   return (
