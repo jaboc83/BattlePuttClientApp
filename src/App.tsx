@@ -1,6 +1,12 @@
 import { Container, CssBaseline, Skeleton } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import { usePerfectPutt, useGame, useKnockout, useMatch } from './hooks';
+import {
+  usePerfectPutt,
+  useGame,
+  useKnockout,
+  useMatch,
+  useHorse,
+} from './hooks';
 import { Footer, Header } from './layout';
 import * as React from 'react';
 import { Game, Match } from './api';
@@ -10,7 +16,8 @@ import { Player } from './api/player';
 import NotFound from './pages/NotFound';
 import KnockoutPage from './pages/Knockout/KnockoutPage';
 import { useInterval } from './hooks/useInterval';
-import PerfectPuttPage from './pages/PerfectPutt/PerfectPutt';
+import PerfectPuttPage from './pages/PerfectPutt/PerfectPuttPage';
+import HorsePage from './pages/Horse/HorsePage';
 
 export interface GameComponentParams {
   match: Match;
@@ -27,6 +34,7 @@ function App() {
   const [player, setPlayer] = React.useState<Player>({} as Player);
   const { getKnockout } = useKnockout();
   const { getPerfectPutt } = usePerfectPutt();
+  const { getHorse } = useHorse();
   const [content, setContent] = React.useState<React.ReactNode>(<></>);
 
   // Load the match
@@ -50,6 +58,11 @@ function App() {
             setContent(<PerfectPuttPage game={g} perfectPutt={pp} />);
             break;
           }
+          case 'horse': {
+            const h = await getHorse(matchId);
+            setContent(<HorsePage game={g} horse={h} />);
+            break;
+          }
           default: {
             setContent(<NotFound />);
             break;
@@ -71,17 +84,7 @@ function App() {
   const getContent = () => {
     if (game && match) {
       if (player.username) {
-        switch (game?.slug) {
-          case 'knockout': {
-            return content;
-          }
-          case 'perfectputt': {
-            return content;
-          }
-          default: {
-            return content;
-          }
-        }
+        return content;
       }
       return <ConnectToMatch game={game} match={match} />;
     }

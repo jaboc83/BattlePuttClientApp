@@ -48,7 +48,6 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
             }),
         );
         const topScoreFp = await getTopScore();
-        console.log('top: ', topScoreFp);
         if (topScoreFp) {
           setTopScore({
             date: topScoreFp.matchComplete,

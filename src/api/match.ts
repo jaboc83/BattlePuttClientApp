@@ -3,6 +3,7 @@ import client, { apiBaseUrl } from './apiBase';
 import { Player } from './player';
 
 export interface MatchPlayer {
+  [key: string]: string | number | undefined;
   username?: string;
   score?: number;
 }
@@ -17,7 +18,6 @@ export interface Match {
   matchComplete?: Date;
   players: Array<MatchPlayer>;
   hostPlayerUsername?: string;
-  playersWhoConfirmedScore: Array<string>;
   lastUpdate: Date;
 }
 
