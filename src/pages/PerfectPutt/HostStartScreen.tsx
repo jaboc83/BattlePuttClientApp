@@ -6,20 +6,21 @@ import {
   Typography,
 } from '@mui/material';
 import * as React from 'react';
-import { Game, FiftyPutts, Player } from '../../api';
-import { useFiftyPutts } from '../../hooks';
+import { Game, PerfectPutt, Player } from '../../api';
+import { usePerfectPutt } from '../../hooks';
 
 interface HostStartScreenProps {
   game: Game;
-  fiftyPutts: FiftyPutts;
+  perfectPutt: PerfectPutt;
 }
 
 const HostStartScreen: React.FC<HostStartScreenProps> = ({
   game,
-  fiftyPutts,
+  perfectPutt,
 }) => {
-  const { startFiftyPutts } = useFiftyPutts();
+  const { startPerfectPutt } = usePerfectPutt();
   const [isStarting, setIsStarting] = React.useState(false);
+  const [numberOfDiscs, setNumOfDiscs] = React.useState<string>('5');
   const [stationDistances, setStationDistances] = React.useState([
     '11',
     '15',
@@ -27,6 +28,13 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
     '25',
     '33',
   ]);
+  const isValidNumOfDiscs = () => {
+    return (
+      !Number.isNaN(parseInt(numberOfDiscs)) &&
+      Number(numberOfDiscs) >= 5 &&
+      Number(numberOfDiscs) <= 10
+    );
+  };
   const isValidDistance = (position: number) => {
     let isValid =
       !Number.isNaN(parseInt(stationDistances[position])) &&
@@ -58,7 +66,30 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
       <Grid container columns={{ sx: 6, sm: 12 }} spacing={5} sx={{ mb: 3 }}>
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
+            id="numberOfDiscs"
+            type="number"
+            margin="none"
+            label="Number of Discs"
+            name="numberOfDiscs"
+            color="primary"
+            sx={{ width: '100%' }}
+            defaultValue={numberOfDiscs}
+            error={!isValidNumOfDiscs()}
+            helperText={
+              !isValidNumOfDiscs()
+                ? 'Number of discs must be between 5 and 10'
+                : null
+            }
+            InputProps={{ inputProps: { min: 5, max: 10 } }}
+            onChange={event => {
+              setNumOfDiscs(event.target.value);
+            }}
+          />
+        </Grid>
+        <Grid item xs={6} sx={{ width: '100%' }}>
+          <TextField
             id="firstDistance"
+            type="number"
             margin="none"
             label="First Station Distance"
             name="firstDistance"
@@ -71,8 +102,8 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
                 ? "Distance must be between 10 and 70 feet, and can't be shorter than the previous station"
                 : null
             }
-            inputProps={{ maxLength: 2 }}
             InputProps={{
+              inputProps: { min: 10, max: 10 },
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
@@ -84,6 +115,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
             id="secondDistance"
+            type="number"
             margin="none"
             label="Second Station Distance"
             name="secondDistance"
@@ -96,8 +128,8 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
                 ? "Distance must be between 10 and 70 feet, and can't be shorter than the previous station"
                 : null
             }
-            inputProps={{ maxLength: 2 }}
             InputProps={{
+              inputProps: { min: 10, max: 70 },
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
@@ -109,6 +141,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
             id="thirdDistance"
+            type="number"
             margin="none"
             label="Third Station Distance"
             name="thirdDistance"
@@ -121,8 +154,8 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
                 ? "Distance must be between 10 and 70 feet, and can't be shorter than the previous station"
                 : null
             }
-            inputProps={{ maxLength: 2 }}
             InputProps={{
+              inputProps: { min: 10, max: 70 },
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
@@ -134,6 +167,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
             id="fourthDistance"
+            type="number"
             margin="none"
             label="Fourth Station Distance"
             name="fourthDistance"
@@ -146,8 +180,8 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
                 ? "Distance must be between 10 and 70 feet, and can't be shorter than the previous station"
                 : null
             }
-            inputProps={{ maxLength: 2 }}
             InputProps={{
+              inputProps: { min: 10, max: 70 },
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
@@ -159,6 +193,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
             id="fifthDistance"
+            type="number"
             margin="none"
             label="Fifth Station Distance"
             name="fifthDistance"
@@ -171,8 +206,8 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
                 ? "Distance must be between 10 and 70 feet, and can't be shorter than the previous station"
                 : null
             }
-            inputProps={{ maxLength: 2 }}
             InputProps={{
+              inputProps: { min: 10, max: 70 },
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
@@ -188,9 +223,10 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         variant="contained"
         onClick={() => {
           setIsStarting(true);
-          startFiftyPutts(
-            fiftyPutts.matchId,
+          startPerfectPutt(
+            perfectPutt.matchId,
             stationDistances.map(d => Number(d)),
+            Number(numberOfDiscs),
           );
         }}
         disabled={isStarting}

@@ -1,59 +1,64 @@
 import { Typography } from '@mui/material';
-import { FiftyPutts } from '../../api';
+import { PerfectPutt } from '../../api';
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { useCurrentPlayer, useFiftyPutts } from '../../hooks';
+import { useCurrentPlayer, usePerfectPutt } from '../../hooks';
 
-interface FiftyPuttsScore {
+interface PerfectPuttScore {
   username: string;
   score: number;
   date: Date | undefined;
 }
 interface WaitingPlayerScreenProps {
-  fiftyPutts: FiftyPutts;
+  perfectPutt: PerfectPutt;
 }
 const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
-  fiftyPutts,
+  perfectPutt,
 }) => {
-  const { getAllFromUser, getTopScore } = useFiftyPutts();
+  const { getAllFromUser, getTopScore } = usePerfectPutt();
   const [recentScores, setRecentScores] =
-    React.useState<Array<FiftyPuttsScore | undefined>>();
-  const [topScore, setTopScore] = React.useState<FiftyPuttsScore | undefined>();
+    React.useState<Array<PerfectPuttScore | undefined>>();
+  const [topScore, setTopScore] = React.useState<
+    PerfectPuttScore | undefined
+  >();
   const { player } = useCurrentPlayer();
 
   React.useEffect(() => {
     const loadData = async () => {
       if (player && player.username) {
-        const fiftyPuttss = await getAllFromUser(player?.username);
+        const perfectPutts = await getAllFromUser(player?.username);
         setRecentScores(
-          fiftyPuttss
+          perfectPutts
             .filter(k => k.matchComplete != null)
             .sort((a, b) => {
               return b.matchComplete!.getTime() - a.matchComplete!.getTime();
             })
             .slice(0)
-            .map(fp => {
+            .map(pp => {
               return {
                 username: player.username!,
-                score: fp.players!.find(
+                score: pp.players!.find(
                   p =>
                     player.username?.toLowerCase() ===
                     p.username?.toLowerCase(),
                 )!.score!,
-                date: fp.matchComplete!,
+                date: pp.matchComplete!,
               };
             }),
         );
         const topScoreFp = await getTopScore();
-        setTopScore({
-          date: topScoreFp.matchComplete,
-          score: topScoreFp.winningScore,
-          username: topScoreFp.players
-            .filter(p => p.score === topScoreFp.winningScore)
-            .map(p => p.username)
-            .join(', '),
-        });
+        console.log('top: ', topScoreFp);
+        if (topScoreFp) {
+          setTopScore({
+            date: topScoreFp.matchComplete,
+            score: topScoreFp.winningScore,
+            username: topScoreFp.players
+              .filter(p => p.score === topScoreFp.winningScore)
+              .map(p => p.username)
+              .join(', '),
+          });
+        }
       }
     };
     loadData().catch(console.error);
@@ -67,8 +72,8 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
         align="center"
         gutterBottom
       >
-        {fiftyPutts?.currentPlayer
-          ? `It's ${fiftyPutts.currentPlayer}'s turn.`
+        {perfectPutt?.currentPlayer
+          ? `It's ${perfectPutt.currentPlayer}'s turn.`
           : "It's not your turn."}
       </Typography>
       {topScore != null ? (
@@ -78,12 +83,10 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
               Top Fifty Putts Score
             </Typography>
             <Typography align="center">
-              {`${topScore?.score} points by ${topScore.username} ${
-                topScore.date
-                  ? `on ${topScore.date?.toLocaleDateString()}`
-                  : " and the game isn't finished"
-              }`}
-            </Typography>
+              {`${topScore?.score} points by ${
+                topScore.username
+              } on ${topScore.date?.toLocaleDateString()}`}
+            </Typography>{' '}
           </CardContent>
         </Card>
       ) : null}

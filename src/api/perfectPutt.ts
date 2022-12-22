@@ -8,50 +8,51 @@ export interface StationScore {
   totalMade: number;
 }
 
-export interface FiftyPutts extends Match {
+export interface PerfectPutt extends Match {
   currentPlayer?: string;
   currentStation: number;
   distances: Array<number>;
   stationScores: Array<Array<StationScore>>;
   winningScore: number;
+  numberOfDiscs: number;
 }
 
-export const fetchFiftyPutts = async (matchId: string, lastUpdate?: Date) => {
-  let url = `${apiBaseUrl}/api/fiftyPutts/${matchId}`;
+export const fetchPerfectPutt = async (matchId: string, lastUpdate?: Date) => {
+  let url = `${apiBaseUrl}/api/perfectPutt/${matchId}`;
   if (lastUpdate) {
     url += `?lastUpdate=${encodeURIComponent(lastUpdate.toISOString())}`;
   }
   const results = await client.get(url);
   if (results.status === 200) {
-    return results.data as FiftyPutts;
+    return results.data as PerfectPutt;
   }
   throw new Error(results.data);
 };
 
-export const fetchAllFiftyPuttsFromUser = async (username: string) => {
-  const url = `${apiBaseUrl}/api/fiftyPutts?username=${encodeURIComponent(
+export const fetchAllPerfectPuttFromUser = async (username: string) => {
+  const url = `${apiBaseUrl}/api/perfectPutt?username=${encodeURIComponent(
     username,
   )}`;
   const results = await client.get(url);
   if (results.status === 200) {
-    return results.data as Array<FiftyPutts>;
+    return results.data as Array<PerfectPutt>;
   }
   throw new Error(results.data);
 };
 
-export const fetchFiftyPuttsTopScore = async () => {
-  const url = `${apiBaseUrl}/api/fiftyPutts?topScore=true`;
+export const fetchPerfectPuttTopScore = async () => {
+  const url = `${apiBaseUrl}/api/perfectPutt?topScore=true`;
   const results = await client.get(url);
   if (results.status === 200) {
-    return results.data as FiftyPutts;
+    return results.data as PerfectPutt;
   }
   throw new Error(results.data);
 };
 
-export const updateFiftyPutts = async (ko: FiftyPutts) => {
-  const results = await client.put(`${apiBaseUrl}/api/fiftyPutts`, ko);
+export const updatePerfectPutt = async (ko: PerfectPutt) => {
+  const results = await client.put(`${apiBaseUrl}/api/perfectPutt`, ko);
   if (results.status === 200) {
-    return results.data as FiftyPutts;
+    return results.data as PerfectPutt;
   }
   throw new Error(results.data);
 };

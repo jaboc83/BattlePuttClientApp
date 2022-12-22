@@ -46,7 +46,6 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
             }),
         );
         const topScoreKo = await getTopScore();
-        console.log('topScoreKO : ', topScoreKo);
         setTopScore({
           date: topScoreKo.matchComplete,
           score: topScoreKo.winningScore,
@@ -79,11 +78,9 @@ const WaitingPlayerScreen: React.FC<WaitingPlayerScreenProps> = ({
               Top Knockout Score
             </Typography>
             <Typography align="center">
-              {`${topScore?.score} points by ${topScore.username} ${
-                topScore.date
-                  ? `on ${topScore.date?.toLocaleDateString()}`
-                  : " and the game isn't finished"
-              }`}
+              {`${topScore?.score} points by ${
+                topScore.username
+              } on ${topScore.date?.toLocaleDateString()}`}
             </Typography>
           </CardContent>
         </Card>

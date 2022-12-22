@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { apiBaseUrl, client } from './apiBase';
 
 export interface Player {

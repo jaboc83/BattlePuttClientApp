@@ -6,19 +6,19 @@ import {
   Typography,
 } from '@mui/material';
 import * as React from 'react';
-import { Game, FiftyPutts } from '../../api';
-import { useFiftyPutts } from '../../hooks';
+import { Game, PerfectPutt } from '../../api';
+import { usePerfectPutt } from '../../hooks';
 
 interface CurrentPlayerScreenProps {
-  fiftyPutts: FiftyPutts;
+  perfectPutt: PerfectPutt;
   game: Game;
 }
 
 const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
-  fiftyPutts,
+  perfectPutt,
   game,
 }) => {
-  const { completeTurn } = useFiftyPutts();
+  const { completeTurn } = usePerfectPutt();
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [madeFirst, setMadeFirst] = React.useState(false);
   const [madeLast, setMadeLast] = React.useState(false);
@@ -38,7 +38,7 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
       setTotalMade(undefined);
     }
     setIsSubmitting(false);
-  }, [fiftyPutts]);
+  }, [perfectPutt]);
 
   return (
     <>
@@ -53,7 +53,7 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
         <>
           <Typography variant="h6" align="center" gutterBottom>
             How many putts did you make at{' '}
-            {`${fiftyPutts?.distances[fiftyPutts.currentStation]}'`}?
+            {`${perfectPutt?.distances[perfectPutt.currentStation]}'`}?
           </Typography>
           <Grid container spacing={2}>
             <Grid item sm={12} xs={12}>
@@ -95,6 +95,7 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
             <Grid item xs={12} sm={12}>
               <TextField
                 id="totalMade"
+                type="number"
                 margin="none"
                 label="Total Putts Made"
                 name="totalMade"
@@ -107,7 +108,9 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
                     ? 'Only 10 possible putts can be made'
                     : null
                 }
-                inputProps={{ maxLength: 2 }}
+                InputProps={{
+                  inputProps: { min: 0, max: perfectPutt.numberOfDiscs },
+                }}
                 onChange={event => {
                   setTotalMade(event.target.value);
                 }}
@@ -135,9 +138,9 @@ const CurrentPlayerScreen: React.FC<CurrentPlayerScreenProps> = ({
                       madeFirst,
                       madeLast,
                       totalMade: Number(totalMade),
-                      username: fiftyPutts.currentPlayer!,
+                      username: perfectPutt.currentPlayer!,
                     },
-                    fiftyPutts,
+                    perfectPutt,
                   );
                   setIsSubmitting(true);
                 }}

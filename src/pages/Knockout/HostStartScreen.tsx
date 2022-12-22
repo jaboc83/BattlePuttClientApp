@@ -55,6 +55,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
         <Grid item xs={6} sx={{ width: '100%' }}>
           <TextField
             id="distance"
+            type="number"
             margin="none"
             label="Distance from Basket"
             name="distance"
@@ -67,8 +68,8 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
                 ? 'Distance must be between 10 and 70 feet'
                 : null
             }
-            inputProps={{ maxLength: 2 }}
             InputProps={{
+              inputProps: { min: 10, max: 70 },
               endAdornment: <InputAdornment position="end">ft</InputAdornment>,
             }}
             onChange={event => {
@@ -91,7 +92,7 @@ const HostStartScreen: React.FC<HostStartScreenProps> = ({
             }
             defaultValue={5}
             sx={{ width: '100%' }}
-            inputProps={{ maxLength: 1 }}
+            InputProps={{ inputProps: { min: 1, max: 5 } }}
             onChange={event => {
               setNumberOfDiscs(event.target.value);
             }}

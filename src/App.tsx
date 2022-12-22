@@ -1,6 +1,6 @@
 import { Container, CssBaseline, Skeleton } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
-import { useFiftyPutts, useGame, useKnockout, useMatch } from './hooks';
+import { usePerfectPutt, useGame, useKnockout, useMatch } from './hooks';
 import { Footer, Header } from './layout';
 import * as React from 'react';
 import { Game, Match } from './api';
@@ -10,7 +10,7 @@ import { Player } from './api/player';
 import NotFound from './pages/NotFound';
 import KnockoutPage from './pages/Knockout/KnockoutPage';
 import { useInterval } from './hooks/useInterval';
-import FiftyPuttsPage from './pages/FiftyPutts/FiftyPutts';
+import PerfectPuttPage from './pages/PerfectPutt/PerfectPutt';
 
 export interface GameComponentParams {
   match: Match;
@@ -26,7 +26,7 @@ function App() {
   const [game, setGame] = React.useState<Game | undefined>();
   const [player, setPlayer] = React.useState<Player>({} as Player);
   const { getKnockout } = useKnockout();
-  const { getFiftyPutts } = useFiftyPutts();
+  const { getPerfectPutt } = usePerfectPutt();
   const [content, setContent] = React.useState<React.ReactNode>(<></>);
 
   // Load the match
@@ -45,9 +45,9 @@ function App() {
             setContent(<KnockoutPage game={g} knockout={ko} />);
             break;
           }
-          case 'fiftyputts': {
-            const fp = await getFiftyPutts(matchId);
-            setContent(<FiftyPuttsPage game={g} fiftyPutts={fp} />);
+          case 'perfectputt': {
+            const pp = await getPerfectPutt(matchId);
+            setContent(<PerfectPuttPage game={g} perfectPutt={pp} />);
             break;
           }
           default: {
@@ -75,7 +75,7 @@ function App() {
           case 'knockout': {
             return content;
           }
-          case 'fiftyputts': {
+          case 'perfectputt': {
             return content;
           }
           default: {

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import { useCurrentPlayer, useWatchFiftyPutts } from '../../hooks';
-import { Game, FiftyPutts, Player } from '../../api';
+import { useCurrentPlayer, useWatchPerfectPutt } from '../../hooks';
+import { Game, PerfectPutt, Player } from '../../api';
 import * as React from 'react';
 import HostStartScreen from './HostStartScreen';
 import CurrentPlayerScreen from './CurrentPlayerScreen';
@@ -8,47 +8,48 @@ import WaitingPlayerScreen from './WaitingPlayerScreen';
 import Typography from '@mui/material/Typography';
 import GuestStartScreen from '../GuestStartScreen';
 
-interface FiftyPuttsPageParams {
+interface PerfectPuttPageParams {
   game: Game;
-  fiftyPutts: FiftyPutts;
+  perfectPutt: PerfectPutt;
 }
 
 const getStartScreen = (
   game: Game,
-  fiftyPutts: FiftyPutts,
+  perfectPutt: PerfectPutt,
   player: Player | null,
 ) => {
   const isHost =
-    Boolean(fiftyPutts?.hostPlayerUsername) &&
+    Boolean(perfectPutt?.hostPlayerUsername) &&
     Boolean(player?.username) &&
-    fiftyPutts?.hostPlayerUsername?.toLowerCase() ==
+    perfectPutt?.hostPlayerUsername?.toLowerCase() ==
       player?.username?.toLowerCase();
   return isHost ? (
-    <HostStartScreen game={game} fiftyPutts={fiftyPutts} />
+    <HostStartScreen game={game} perfectPutt={perfectPutt} />
   ) : (
-    <GuestStartScreen hostName={fiftyPutts.hostPlayerUsername!} />
+    <GuestStartScreen hostName={perfectPutt.hostPlayerUsername!} />
   );
 };
 
 const getPlayerScreen = (
   game: Game,
-  fiftyPutts: FiftyPutts,
+  perfectPutt: PerfectPutt,
   player: Player | null,
 ) => {
   const isCurrentPlayer =
-    fiftyPutts.currentPlayer?.toLowerCase() === player?.username?.toLowerCase();
+    perfectPutt.currentPlayer?.toLowerCase() ===
+    player?.username?.toLowerCase();
   return isCurrentPlayer ? (
-    <CurrentPlayerScreen game={game} fiftyPutts={fiftyPutts} />
+    <CurrentPlayerScreen game={game} perfectPutt={perfectPutt} />
   ) : (
-    <WaitingPlayerScreen fiftyPutts={fiftyPutts} />
+    <WaitingPlayerScreen perfectPutt={perfectPutt} />
   );
 };
 
-const getFinishScreen = (fiftyPutts: FiftyPutts, player: Player | null) => {
-  const currentPlayer = fiftyPutts.players.find(
+const getFinishScreen = (perfectPutt: PerfectPutt, player: Player | null) => {
+  const currentPlayer = perfectPutt.players.find(
     p => p?.username?.toLowerCase() === player?.username?.toLowerCase(),
   );
-  const singlePlayer = fiftyPutts.players.length == 1;
+  const singlePlayer = perfectPutt.players.length == 1;
   if (singlePlayer) {
     return (
       <Typography variant="h3" color="secondary" align="center">
@@ -56,13 +57,13 @@ const getFinishScreen = (fiftyPutts: FiftyPutts, player: Player | null) => {
       </Typography>
     );
   }
-  const sortedPlayers = fiftyPutts.players.sort(
+  const sortedPlayers = perfectPutt.players.sort(
     (a, b) => Number(b.score) - Number(a.score),
   );
   const isTie =
     sortedPlayers.length > 1 &&
     sortedPlayers[0].score == sortedPlayers[1].score;
-  const winner = fiftyPutts.players.sort(
+  const winner = perfectPutt.players.sort(
     (a, b) => Number(b.score) - Number(a.score),
   )[0];
   const isWinner =
@@ -89,15 +90,15 @@ const getFinishScreen = (fiftyPutts: FiftyPutts, player: Player | null) => {
   }
 };
 
-const FiftyPuttsPage: React.FC<FiftyPuttsPageParams> = ({
+const PerfectPuttPage: React.FC<PerfectPuttPageParams> = ({
   game,
-  fiftyPutts: incomingFiftyPutts,
+  perfectPutt: incomingPerfectPutt,
 }) => {
   const { player } = useCurrentPlayer();
-  const [fiftyPutts, setFiftyPutts] = React.useState(incomingFiftyPutts);
+  const [perfectPutt, setPerfectPutt] = React.useState(incomingPerfectPutt);
 
   // Keep polling for updates
-  useWatchFiftyPutts(fiftyPutts, setFiftyPutts);
+  useWatchPerfectPutt(perfectPutt, setPerfectPutt);
 
   return (
     <Box
@@ -109,15 +110,17 @@ const FiftyPuttsPage: React.FC<FiftyPuttsPageParams> = ({
       }}
     >
       {/* Ready to start */}
-      {!fiftyPutts.matchStart ? getStartScreen(game, fiftyPutts, player) : null}
+      {!perfectPutt.matchStart
+        ? getStartScreen(game, perfectPutt, player)
+        : null}
       {/* Game in progress */}
-      {fiftyPutts.matchStart && !fiftyPutts.matchComplete
-        ? getPlayerScreen(game, fiftyPutts, player)
+      {perfectPutt.matchStart && !perfectPutt.matchComplete
+        ? getPlayerScreen(game, perfectPutt, player)
         : null}
       {/* Game complete*/}
-      {fiftyPutts.matchComplete ? getFinishScreen(fiftyPutts, player) : null}
+      {perfectPutt.matchComplete ? getFinishScreen(perfectPutt, player) : null}
     </Box>
   );
 };
 
-export default FiftyPuttsPage;
+export default PerfectPuttPage;
